@@ -1,6 +1,6 @@
 from time import time
 
-from testmainapp.items import Item
+from testmainapp.catalog import Item
 
 
 class Order:
@@ -16,7 +16,7 @@ class Order:
         self._items = list()
         self._order_date = time()
         self._order_status = self.order_status_dict["Created"]
-        return f'Создан заказ №{self.order_id}'
+        return None
 
     def __str__(self):
         return f'Заказ №{self.order_id}'
@@ -54,14 +54,12 @@ class Order:
 
 class OrderItem:
     """ Item of order. Contains good and quantity """
-    item_quantity = 0
 
-    def __init__(self, orderitem_id, item_id, quantity):
+    def __init__(self, orderitem_id, item_id, quantity=1):
         self._orderitem_id = orderitem_id
         self.item_id = Item(item_id)
         self.item_quntity += quantity
-        return (f'Добавле товар {self.order_id} в количестве '
-                f'{self.item_quntity}')
+        return None
 
     def change_quantity(self, new_quantity):
         if self.item_quntity - new_quantity < 0:

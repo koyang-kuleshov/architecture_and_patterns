@@ -1,7 +1,10 @@
 from random import randint
 from time import time
-
-from order import Order
+import unittest
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../../'))
+from .order import Order
 
 
 class Customer:
@@ -15,10 +18,10 @@ class Customer:
         self._orders = list()
         self._is_active = True
         self._status_date = time()
-        return f'Создан пользователь {name} {surname}'
+        return None
 
     def __str__(self):
-        return f'{self.name} {self.surname}'
+        return f'{self.name} {self.surname} {self.age}'
 
     def create_order(self):
         order_id = len(self.o_ordersrders) + 1
@@ -31,6 +34,16 @@ class Customer:
         return f'Пользователь удалён'
 
 
-if __name__ == '__main__':
-    user = Customer('Ivan', 'Ivanov', 23)
-    print(user)
+class TestCustomer(unittest.TestCase):
+    def setUp(self):
+        self.name = 'Ivan'
+        self.surname = 'Ivanov'
+        self.age = 23
+
+    def test_customer(self):
+        user = Customer(self.name, self.surname, self.age)
+        self.assertEqual(user.__str__(), f'{self.name} {self.surname} {self.age}')
+
+
+if __name__ == "__main__":
+    unittest.main()
