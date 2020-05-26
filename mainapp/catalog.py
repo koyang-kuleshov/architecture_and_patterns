@@ -128,6 +128,9 @@ class Item(GoodItem):
     def _set_fabric_price(self):
         self._fabric_price = float(input('Введите закупочную стоимость: '))
 
+    def add_to_order(self, item_id):
+        return Item.item_list[item_id]
+
     def update_item(self, item_id, item_style='', item_name='', item_size=''):
         if item_style:
             self.item_style = item_style
@@ -226,6 +229,9 @@ class TestItem(unittest.TestCase):
 
     def test_item(self):
         self.assertIsInstance(str(self.tst_item), str)
+
+    def test_add_to_order(self):
+        self.assertIsInstance(self.tst_item, Item)
 
     def test_update_item(self):
         self.assertIsInstance(self.tst_item.update_item(self.item_id,

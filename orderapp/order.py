@@ -1,10 +1,12 @@
 from time import time
+import unittest
 
-from testmainapp.catalog import Item
+from mainapp.catalog import Item
 
 
 class Order:
     """ Class customer order """
+    orderitem_list = []
     _order_status_dict = {
         'Created': 'Created',
         'Forming': 'Forming',
@@ -55,17 +57,54 @@ class Order:
 class OrderItem:
     """ Item of order. Contains good and quantity """
 
-    def __init__(self, orderitem_id, item_id, quantity=1):
+    def __init__(self, orderitem_id, item_id, size, quantity=1):
         self._orderitem_id = orderitem_id
-        self.item_id = Item(item_id)
-        self.item_quntity += quantity
+        self.orderitem = Item.item_list[item_id]
+        self.orderitem_size = size
+        self.orderitem_quantity = quantity
         return None
 
-    def change_quantity(self, new_quantity):
-        if self.item_quntity - new_quantity < 0:
-            return f'Неверно задано количество товаров'
-        self.item_quntity = new_quantity
+    def update_orderitem(self, new_size, new_quantity):
+        if new_size:
+            self.orderitem_size = new_size
+        if self.orderitem_quantity - new_quantity > 0:
+            self.orderitem_quantity = new_quantity
+        return {
+                'orderitem_size': self.orderitem_size,
+                'orderitem_quantity': self.orderitem_quantity
+        }
 
-    @staticmethod
+    @property
     def get_orderitem_sum(self):
-        return self.item.get_price * self.item_quntity
+        return {
+            'orderitem': self.orderitem,
+            'orderitem_quantity': self.orderitem_quantity,
+            'orderitem_summary': self.orderitem.get_price *
+            self.orderitem_quantity
+        }
+
+
+class TestOrderItem(unittest.TestCase):
+
+    def setUp(self):
+        Item(0, 0, '1BLCXL', 'Куртка', 'XL')
+        self.orderitem = OrderItem(0, 0, 'S', 4)
+
+    def test_orderitem(self):
+        self.assertIsInstance(self.orderitem.orderitem, Item)
+
+    def test_update_orderitem(self):
+        self.assertIsInstance(self.orderitem.update_orderitem('M', 1), dict)
+
+    def test_orderitem_sum(self):
+        self.assertEqual(self.orderitem.get_orderitem_sum,
+                         {
+                          'orderitem': self.orderitem.orderitem,
+                          'orderitem_quantity': 4,
+                          'orderitem_summary': self.orderitem.orderitem.
+                          get_price * 4
+                         })
+
+
+if __name__ == "__main__":
+    unittest.main()
