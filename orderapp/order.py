@@ -16,7 +16,7 @@ class Order:
         self._order_id = order_id
         self._item_list = list()
         self._order_date = time()
-        Order._order_status = self._order_status_dict["Created"]
+        self._order_status = Order._order_status_dict["Created"]
         return None
 
     def __str__(self):
@@ -124,9 +124,7 @@ class TestOrder(unittest.TestCase):
                          )
 
     def test_get_status(self):
-        self.assertEqual(self.order.get_status, (f'Статус заказа '
-                         f'{self.order._order_status}')
-                         )
+        self.assertEqual(self.order.get_status, self.order._order_status)
 
     def test_set_status(self):
         self.assertEqual(self.order.set_status('Forming'), 'Forming')
