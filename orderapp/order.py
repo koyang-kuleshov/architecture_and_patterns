@@ -52,7 +52,7 @@ class Order:
 
     @property
     def get_status(self):
-        return f'Статус заказа {self._order_status}'
+        return self._order_status
 
     def set_status(self, new_status):
         try:
