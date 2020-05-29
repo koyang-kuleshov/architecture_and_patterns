@@ -1,14 +1,46 @@
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 from random import randrange
+from datetime import date
 import unittest
 
 
+class CurrencyRateService(metaclass=ABCMeta):
+    @abstractmethod
+    def get_currency_rate(self, currency):
+        pass
+
+
+class CbrCurrencyRateService(CurrencyRateService):
+    @property
+    def get_currency_rate(self):
+        self.currency_rate = randrange(65, 80) * 0.99
+        return self.currency_rate
+
+
+class ProxyCurrencyRateService(CurrencyRateService):
+    def __init__(self):
+        self.currencyRateService = CbrCurrencyRateService()
+        self.rate = Catalog.currency_rate
+        self._now = date.today()
+
+    @property
+    def get_currency_rate(self):
+        try:
+            spam_date = self.rate['_now']
+        except KeyError:
+            self.rate['_now'] = self.currencyRateService.\
+                get_currency_rate
+            return self.rate['_now']
+        else:
+            return spam_date
+
+
 class Catalog:
-    currency_rate = 0
+    currency_rate = dict()
     category_list = list()
 
     def __init__(self):
-        Catalog.currency_rate = self.fetch_currency_rate
+        Catalog.currency_rate = ProxyCurrencyRateService()
         return None
 
     def __str__(self):
@@ -17,11 +49,6 @@ class Catalog:
 
     def show_category(cls, category_id):
         return cls.category_list[category_id]
-
-    @property
-    def fetch_currency_rate(self):
-        self.currency_rate = randrange(65, 80) * 0.99
-        return self.currency_rate
 
     def show_all_categories(cls):
         return {'categories': cls.category_list}
@@ -243,4 +270,5 @@ class TestItem(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    # unittest.main()
+    t = Catalog()
