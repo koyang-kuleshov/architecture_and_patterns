@@ -1,6 +1,7 @@
 from abc import ABC, ABCMeta, abstractmethod
 from random import randrange
 from datetime import date
+import requests
 import unittest
 
 
@@ -11,26 +12,34 @@ class CurrencyRateService(metaclass=ABCMeta):
 
 
 class CbrCurrencyRateService(CurrencyRateService):
-    @property
-    def get_currency_rate(self):
-        self.currency_rate = randrange(65, 80) * 0.99
-        return self.currency_rate
+    def get_currency_rate(self, _now):
+        try:
+            resp = requests.get(
+                'https://www.cbr-xml-daily.ru/daily_json.js')
+        except Exception:
+            return self.currency_rate['previous']
+        else:
+            spam = resp.json()["Valute"]["USD"]
+            Catalog.currency_rate[_now] = spam["Value"]
+            Catalog.currency_rate['previous'] = spam["Previous"]
+            return spam["Value"]
 
 
 class ProxyCurrencyRateService(CurrencyRateService):
     def __init__(self):
         self.currencyRateService = CbrCurrencyRateService()
         self.rate = Catalog.currency_rate
-        self._now = date.today()
+        # self.rate = dict()
+        self._now = str(date.today())
 
     @property
     def get_currency_rate(self):
         try:
-            spam_date = self.rate['_now']
+            spam_date = self.rate[self._now]
         except KeyError:
-            self.rate['_now'] = self.currencyRateService.\
-                get_currency_rate
-            return self.rate['_now']
+            self.rate[self._now] = self.currencyRateService.\
+                get_currency_rate(self._now)
+            return self.rate[self._now]
         else:
             return spam_date
 
@@ -40,11 +49,11 @@ class Catalog:
     category_list = list()
 
     def __init__(self):
-        Catalog.currency_rate = ProxyCurrencyRateService()
-        return None
+        # Catalog.currency_rate = ProxyCurrencyRateService()
+        pass
 
     def __str__(self):
-        return str({'currency_rate': self.currency_rate,
+        return str({'currency_rate': ProxyCurrencyRateService().get_currency_rate,
                     'category_list': Catalog.category_list})
 
     def show_category(cls, category_id):
