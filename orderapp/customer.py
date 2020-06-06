@@ -17,7 +17,6 @@ class Customer:
         self._orders_list = list()
         self._is_active = True
         self._status_date = time()
-        return None
 
     def __str__(self):
         return f'{self.name} {self.surname} {self.age}'

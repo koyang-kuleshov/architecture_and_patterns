@@ -3,6 +3,8 @@ from random import randrange
 from datetime import date
 import requests
 
+from database import GetState, SetState
+
 
 class CurrencyRateService(metaclass=ABCMeta):
     @abstractmethod
@@ -49,7 +51,6 @@ class Catalog:
     category_list = list()
 
     def __init__(self):
-        # Catalog.currency_rate = ProxyCurrencyRateService()
         pass
 
     def __str__(self):
@@ -73,7 +74,6 @@ class Category:
         self._price_modifier = price_modifier
         self.category_items = list()
         self._is_active = True
-        return None
 
     def __str__(self):
         dict_to_json = {'category_id': self.category_id,
@@ -142,8 +142,7 @@ class Item(GoodItem):
         self.item_size = item_size
         self._fabric_price = self._get_fabric_price
         self._now = str(date.today())
-        Item.item_list.append(self)
-        return None
+        SetState(self)
 
     def __str__(self):
         dict_to_json = {

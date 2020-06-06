@@ -16,7 +16,6 @@ class Order:
         self._item_list = list()
         self._order_date = time()
         self._order_status = Order._order_status_dict["Created"]
-        return None
 
     def __str__(self):
         return f'Заказ №{self._order_id}'
