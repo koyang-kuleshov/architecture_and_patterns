@@ -3,7 +3,7 @@ from random import randrange
 from datetime import date
 import requests
 
-from database import GetState, SetState
+from mainapp.database import GetState, SetState
 
 
 class CurrencyRateService(metaclass=ABCMeta):
@@ -142,7 +142,7 @@ class Item(GoodItem):
         self.item_size = item_size
         self._fabric_price = self._get_fabric_price
         self._now = str(date.today())
-        SetState(self)
+        self.create_memento(self)
 
     def __str__(self):
         dict_to_json = {
@@ -194,3 +194,8 @@ class Item(GoodItem):
         self.price = Catalog.currency_rate['_now'] * self._fabric_price
         return self.price
 
+    def create_memento(self):
+        GetState(self)
+
+    def set_memento(self):
+        SetState(self)
