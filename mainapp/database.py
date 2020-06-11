@@ -1,22 +1,32 @@
 """
 Database class with memento pattern
 """
-import json
+import jsonpickle
 
 
-class GetState:
-    def __call__():
-        with open('database.json', 'r') as file_r:
-            data = json.load(file_r)
-        return data
+class ItemSerializer:
+    def serialize_items(self, items):
+        return jsonpickle.dumps(items)
 
+    def deserialize_items(self, items):
+        return jsonpickle.loads(items)
 
-class SetState:
-    def __call___call__(elem):
+    def dump_items(self, items, file_name):
         try:
-            with open('database.json', "w") as file_w:
-                json.dump(elem, file_w)
+            with open(file_name, 'w', encoding='utf-8') as file_w:
+                items = self.serialize_items(items)
+                file_w.write(items)
         except Exception as err:
             return err
         else:
             return True
+
+    def load_items(self, file_name):
+        try:
+            with open(file_name, 'r', encoding='utf-8') as file_r:
+                data = file_r.read()
+        except Exception as err:
+            return err
+        else:
+            items = self.deserialize_items(data)
+        return items

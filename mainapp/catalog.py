@@ -3,7 +3,7 @@ from random import randrange
 from datetime import date
 import requests
 
-from mainapp.database import GetState, SetState
+from mainapp.database import ItemSerializer
 
 
 class CurrencyRateService(metaclass=ABCMeta):
@@ -194,10 +194,10 @@ class Item(GoodItem):
         self.price = Catalog.currency_rate['_now'] * self._fabric_price
         return self.price
 
-    @classmethod
-    def create_memento():
-        SetState(Item.item_list)
+    def create_memento(self):
+        set_state = ItemSerializer.dump_items()
+        set_state(self.__class__.item_list)
 
-    @classmethod
-    def set_memento():
-        Item.list_append = GetState()
+    def set_memento(self, file_name):
+        get_state = ItemSerializer.load_items()
+        get_state(self.__class__.item_list)
