@@ -21,11 +21,11 @@ class TestDatabaseMapper(unittest.TestCase):
         self.update_item.item_id = 5
 
     def test_find_by_id(self):
-        self.assertIsInstance(self.find_by_id(self.db_mapper, 1), Item)
+        self.assertIsInstance(self.find_by_id(self.db_mapper, 1), tuple)
         self.assertIsNone(self.find_by_id(self.db_mapper, 8))
 
     def test_insert(self):
-        self.assertTrue(self.insert(self.db_mapper, self.item))
+        self.assertIsInstance(self.insert(self.db_mapper, self.item), int)
 
     def test_update(self):
         self.assertTrue(self.update(self.db_mapper, self.update_item))

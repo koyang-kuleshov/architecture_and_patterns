@@ -1,9 +1,12 @@
+import os
+import sqlite3
 from abc import ABC, ABCMeta, abstractmethod
 from random import randrange
 from datetime import date
 import requests
 
 from mainapp.dump import ItemSerializer
+from mainapp.database import DatabaseMapper
 
 
 class CurrencyRateService(metaclass=ABCMeta):
@@ -130,19 +133,21 @@ class GoodItem(ABC):
 
 
 class Item(GoodItem):
-    item_list = list()
+    item_list = {}
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(BASE_DIR, 'patterns.sqlite')
+    connection = sqlite3.connect(db_path)
+    db_mapper = DatabaseMapper(connection)
 
     def __init__(self, category_id, item_idx, item_style, item_name,
                  item_size):
         self.category_id = category_id
         self.item_idx = item_idx
-        self.item_id = len(self.item_list)
         self.item_style = item_style
         self.item_name = item_name
         self.item_size = item_size
         self._fabric_price = self._get_fabric_price
         self._now = str(date.today())
-        Item.item_list.append(self)
 
     def __str__(self):
         dict_to_json = {
@@ -201,3 +206,16 @@ class Item(GoodItem):
     def set_memento(self, file_name):
         get_state = ItemSerializer.load_items()
         get_state(self.__class__.item_list)
+
+    @classmethod
+    def add_item(cls, item):
+        if item.item_id not in cls.item_list.keys():
+            spam = DatabaseMapper.insert(cls.db_mapper, item)
+            cls.item_list[spam] = item
+
+    @classmethod
+    def get_item(cls, item_id):
+        if item_id in cls.item_list.keys():
+            return cls.item_list[item_id]
+        else:
+            return None

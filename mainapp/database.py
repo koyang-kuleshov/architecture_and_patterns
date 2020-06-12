@@ -2,8 +2,6 @@
 Database class with mapper
 """
 
-from mainapp.catalog import Item
-
 
 class DatabaseMapper:
     def __init__(self, connection):
@@ -16,7 +14,7 @@ class DatabaseMapper:
         self.cursor.execute(statement, (item_id,))
         result = self.cursor.fetchall()
         if result:
-            return Item(*result[0])
+            return result[0]
         else:
             return None
 
@@ -28,7 +26,11 @@ class DatabaseMapper:
                                         item.item_size))
         try:
             self.connection.commit()
-            return True
+            statement = "SELECT item_id, category_id, item_idx, item_style, \
+                item_name, item_size FROM items ORDER BY item_id DESC"
+            self.cursor.execute(statement)
+            result = self.cursor.fetchone()
+            return result[0]
         except Exception as e:
             return e.args
 
