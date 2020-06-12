@@ -153,7 +153,7 @@ class Item(GoodItem):
         dict_to_json = {
             'category_id': self.category_id,
             'item_idx': self.item_idx,
-            'item_id': self.item_id,
+            # 'item_id': self.item_id,
             'item_style': self.item_style,
             'item_name': self.item_name,
             'item_size': self.item_size,
@@ -181,7 +181,7 @@ class Item(GoodItem):
             self.item_size = item_size
         dict_to_json = {
             'category_id': self.category_id,
-            'item_id': self.item_id,
+            # 'item_id': self.item_id,
             'item_style': self.item_style,
             'item_name': self.item_name,
             'item_size': self.item_size,
@@ -209,13 +209,18 @@ class Item(GoodItem):
 
     @classmethod
     def add_item(cls, item):
-        if item.item_id not in cls.item_list.keys():
+        try:
+            item_id = item.item_id
+        except AttributeError:
+            item_id = 0
+        if item_id not in cls.item_list.keys():
             spam = DatabaseMapper.insert(cls.db_mapper, item)
             cls.item_list[spam] = item
+            return spam
 
     @classmethod
     def get_item(cls, item_id):
         if item_id in cls.item_list.keys():
             return cls.item_list[item_id]
         else:
-            return None
+            return cls.item_list

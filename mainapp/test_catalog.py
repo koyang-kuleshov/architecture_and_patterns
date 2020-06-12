@@ -60,10 +60,10 @@ class TestCategory(unittest.TestCase):
 class TestItem(unittest.TestCase):
 
     def setUp(self):
+        self.item_id = None
         self.category_id = 0
         self.item_idx = 0
         self.category_name = 'Одежда'
-        self.item_id = 1
         self.item_style = '1BLCNVYM'
         self.item_name = 'Куртка'
         self.item_size = 'M'
@@ -78,12 +78,20 @@ class TestItem(unittest.TestCase):
         self.assertIsInstance(self.tst_item, Item)
 
     def test_update_item(self):
-        self.assertIsInstance(self.tst_item.update_item(self.item_id,
-                                                        '1WHTREDXL',
+        self.assertIsInstance(self.tst_item.update_item('1WHTREDXL',
                                                         'Жилет', 'XL'), dict)
 
     def test_item_remove(self):
         self.assertFalse(self.tst_item.remove_item)
+
+    def test_add_item(self):
+        self.item_id = self.tst_item.add_item(self.tst_item)
+        self.assertIsNotNone(self.item_id)
+        self.item_id = None
+
+    def test_get_item(self):
+        item = self.tst_item.get_item(46)
+        self.assertIsInstance(item, dict)
 
 
 if __name__ == "__main__":
