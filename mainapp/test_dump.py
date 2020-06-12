@@ -1,7 +1,7 @@
 import unittest
 
 from mainapp.catalog import Item
-from mainapp.database import ItemSerializer
+from mainapp.dump import ItemSerializer
 
 
 class TestItemSerializer(unittest.TestCase):

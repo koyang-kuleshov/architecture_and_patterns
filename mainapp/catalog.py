@@ -3,7 +3,7 @@ from random import randrange
 from datetime import date
 import requests
 
-from mainapp.database import ItemSerializer
+from mainapp.dump import ItemSerializer
 
 
 class CurrencyRateService(metaclass=ABCMeta):

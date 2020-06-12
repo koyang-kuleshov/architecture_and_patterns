@@ -67,7 +67,8 @@ class TestItem(unittest.TestCase):
         self.item_style = '1BLCNVYM'
         self.item_name = 'Куртка'
         self.item_size = 'M'
-        self.tst_item = Item(self.category_id, self.item_idx, self.item_style, self.item_name,
+        self.tst_item = Item(self.category_id, self.item_idx, self.item_style,
+                             self.item_name,
                              self.item_size)
 
     def test_item(self):
