@@ -214,7 +214,7 @@ class Item(GoodItem):
         except AttributeError:
             item_id = 0
         if item_id not in cls.item_list.keys():
-            spam = DatabaseMapper.insert(cls.db_mapper, item)
+            spam = cls.db_mapper.insert(item)
             cls.item_list[spam] = item
             return spam
 
