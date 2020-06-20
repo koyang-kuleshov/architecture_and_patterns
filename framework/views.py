@@ -1,13 +1,15 @@
-from framework import Application
+from framework.framework import Application
+from mainapp.catalog import Catalog
 
 
-def index_view(request):
-    return '200 OK', 'Index Page'
+def index_view():
+    data = Catalog.show_all_items()
+    return '200 OK', data
 
 
-def about_view(request):
-    if 'secret' in request:
-        return '200 OK', f'<h1>About Page {request["secret"]}</h1>'
+def about_view():
+    # if 'secret' in request:
+    #     return '200 OK', f'<h1>About Page {request["secret"]}</h1>'
     return '200 OK', f'<h1>About Page</h1>'
 
 
@@ -22,6 +24,7 @@ def secret_middleware(request):
 
 
 # middlewares = [secret_middleware]
-middlewares = []
+# middlewares = []
 
-application = Application(urls, middlewares)
+# application = Application(urls, middlewares)
+application = Application(urls)

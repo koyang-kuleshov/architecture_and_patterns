@@ -1,24 +1,27 @@
 class Application:
 
-    def __init__(self, urls, middlewares):
+    # def __init__(self, urls, middlewares):
+    def __init__(self, urls):
         self.urls = urls
-        self.middlewares = middlewares
+        # self.middlewares = middlewares
 
     def __call__(self, environ, start_response):
         path = environ['PATH_INFO']
+        data = []
 
-        request = {}
+        # request = {}
 
-        for middleware in self.middlewares:
-            middleware(request)
+        # for middleware in self.middlewares:
+        #     middleware(request)
 
         if path in self.urls:
             view = self.urls[path]
-            code, text = view(request)
-            start_response(code, [('Content-Type', 'text/html')])
-            return [text.encode(encoding='utf-8')]
+            # code, text = view(request)
+            code, text = view()
+            start_response(code, [('Content-Type', 'text/plain')])
+            for row in text:
+                data.append(list(row))
+            return [str(data).encode(encoding='utf-8-sig')]
         else:
             start_response('404', [('Content-Type', 'text/plain')])
             return [b'Not Found']
-
-

@@ -58,3 +58,9 @@ class DatabaseMapper:
             return True
         except Exception as e:
             return e.args
+
+    def show_all(self):
+        statement = "SELECT * FROM items"
+        self.cursor.execute(statement)
+        result = self.cursor.fetchall()
+        return result

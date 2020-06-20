@@ -66,6 +66,9 @@ class Catalog:
     def show_all_categories(cls):
         return {'categories': cls.category_list}
 
+    def show_all_items():
+        return Item.db_mapper.show_all()
+
     def search(self):
         pass
 
