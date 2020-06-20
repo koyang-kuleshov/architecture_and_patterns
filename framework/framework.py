@@ -18,6 +18,7 @@ class Application:
             start_response(code, [('Content-Type', 'text/html')])
             return [text.encode(encoding='utf-8')]
         else:
-            start_response('404 WHAT HAPPEND', [('Content-Type', 'text/plain')])
+            start_response('404', [('Content-Type', 'text/plain')])
             return [b'Not Found']
+
 

@@ -14,6 +14,8 @@ urls = {
     '/about/': about_view
 }
 
+
+
 def secret_middleware(request):
     request['secret'] = 'secret'
 
