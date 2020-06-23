@@ -1,4 +1,4 @@
-from cgi import parse_qs, escape, parse_multipart, parse
+from cgi import parse_qs
 
 
 class Application:
