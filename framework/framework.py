@@ -1,31 +1,44 @@
-from cgi import parse_qs, escape, parse_multipart, parse
-
-
 class Application:
 
     def __init__(self, urls):
         self.urls = urls
+
+    def parse_input_data(self, data: str):
+        result = {}
+        if data:
+            params = data.split('&')
+            for item in params:
+                k, v = item.split('=')
+                result[k] = v
+        return result
+
+    def parse_wsgi_input_data(self, data: bytes):
+        result = {}
+        if data:
+            data_str = data.decode(encoding='utf-8')
+            result = self.parse_input_data(data_str)
+        return result
+
+    def get_wsgi_input_data(self, env):
+        content_length_data = env.get('CONTENT_LENGTH')
+        content_length = int(content_length_data) if content_length_data else 0
+        data = env['wsgi.input'].\
+            read(content_length) if content_length > 0 else b''
+        return data
 
     def __call__(self, environ, start_response):
         path = environ['PATH_INFO']
         if path[-1] != '/':
             path += '/'
         method = environ['REQUEST_METHOD']
+        data = self.get_wsgi_input_data(environ)
+        data = self.parse_wsgi_input_data(data)
 
         if path in self.urls:
             view = self.urls[path]
-            if method == 'POST':
-                try:
-                    request_body_size = int(environ.get('CONTENT_LENGTH', 0))
-                except ValueError:
-                    request_body_size = 0
-                print(environ)
-                request = environ['wsgi.input'].read(request_body_size)
-                # FIXIT: Not working
-                d = parse_qs(request)
-                print(d)
-                spam = d.get('category_id')[0]
-                print(spam)
+            request = {}
+            request['method'] = method
+            request['data'] = data
             code, text, type_header = view(request)
             start_response(code, [('Content-Type', type_header)])
             return [str(text).encode(encoding='utf-8-sig')]

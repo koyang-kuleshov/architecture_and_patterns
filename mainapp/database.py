@@ -21,9 +21,9 @@ class DatabaseMapper:
     def insert(self, item):
         statement = "INSERT INTO items (category_id, item_idx, item_style, \
             item_name, item_size) VALUES (?, ?, ?, ?, ?)"
-        self.cursor.execute(statement, (item.category_id, item.item_idx,
-                                        item.item_style, item.item_name,
-                                        item.item_size))
+        self.cursor.execute(statement, (item['category_id'], item['item_idx'],
+                                        item['item_style'], item['item_name'],
+                                        item['item_size']))
         try:
             self.connection.commit()
             statement = "SELECT item_id, category_id, item_idx, item_style, \
