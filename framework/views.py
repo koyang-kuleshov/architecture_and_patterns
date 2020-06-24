@@ -18,7 +18,6 @@ def add_item(request=None):
 
 
 def add_item_script(request=None):
-    print(request)
     if request is not None:
         Item.add_item(request['data'])
     return '200 OK', 'Товар добавлен. <a href="/">Перейти на главную</a>', HTML
